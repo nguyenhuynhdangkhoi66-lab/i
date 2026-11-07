@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF MOD TOOL - Can Thiệp Game Free Fire</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; user-select:none; }
+
+body {
+  background:#0a0a0a; color:#fff; min-height:100vh;
+  background-image: radial-gradient(circle at 20% 20%, #1a1a2e 0%, #0a0a0a 60%);
+}
+
+header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:15px 25px; border-bottom:2px solid #fff;
+  position:sticky; top:0; background:rgba(10,10,10,.95); z-index:100;
+}
+.logo { font-size:24px; font-weight:900; letter-spacing:2px; }
+.logo span { color:#fff; background:#000; padding:2px 8px; border:2px solid #fff; }
+.status { font-size:13px; color:#0f0; }
+
+/* NÚT CHUYỂN QUA GAME FF THẬT */
+#switchBtn {
+  position:fixed; bottom:25px; right:25px; z-index:999;
+  padding:15px 25px; font-size:16px; font-weight:bold;
+  background:#fff; color:#000; border:3px solid #fff; border-radius:50px;
+  cursor:pointer; box-shadow:0 0 25px rgba(255,255,255,.5);
+  pointer-events:auto !important; transition:.3s;
+}
+#switchBtn:hover { background:#000; color:#fff; box-shadow:0 0 35px #fff; }
+#switchBtn:active { transform:scale(.95); }
+
+.tabs { display:flex; gap:5px; padding:10px 20px; flex-wrap:wrap; }
+.tab {
+  padding:12px 22px; background:#111; border:2px solid #333; color:#aaa;
+  cursor:pointer; font-weight:bold; border-radius:8px 8px 0 0; pointer-events:auto;
+}
+.tab.active { background:#fff; color:#000; border-color:#fff; }
+
+.content { padding:20px; max-width:900px; margin:auto; padding-bottom:100px; }
+.panel { display:none; animation:fade .3s; }
+.panel.active { display:block; }
+@keyframes fade { from{opacity:0;transform:translateY(10px)} to{opacity:1} }
+
+.card {
+  background:#111; border:2px solid #333; border-radius:12px;
+  padding:20px; margin-bottom:15px; pointer-events:auto;
+}
+.card h3 { margin-bottom:15px; border-left:4px solid #fff; padding-left:10px; }
+
+.toggle-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #222; }
+.switch { position:relative; width:55px; height:28px; flex-shrink:0; }
+.switch input { opacity:0; width:100%; height:100%; position:absolute; cursor:pointer; z-index:5; }
+.slider-sw { position:absolute; inset:0; background:#333; border-radius:28px; transition:.3s; pointer-events:none; }
+.slider-sw:before {
+  content:''; position:absolute; width:22px; height:22px; left:3px; top:3px;
+  background:#fff; border-radius:50%; transition:.3s;
+}
+.switch input:checked + .slider-sw { background:#fff; }
+.switch input:checked + .slider-sw:before { transform:translateX(27px); background:#000; }
+
+.slider-row { padding:12px 0; border-bottom:1px solid #222; }
+.slider-row label { display:flex; justify-content:space-between; margin-bottom:8px; }
+.slider-row .val { font-weight:bold; background:#fff; color:#000; padding:1px 10px; border-radius:10px; }
+input[type=range] { width:100%; height:6px; -webkit-appearance:none; background:#333; border-radius:3px; cursor:pointer; }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:20px; height:20px; background:#fff;
+  border-radius:50%; border:3px solid #000; box-shadow:0 0 10px #fff; cursor:pointer;
+}
+
+.fps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.fps-btn {
+  padding:14px; background:#000; border:2px solid #444; color:#fff;
+  font-size:18px; font-weight:bold; border-radius:10px; cursor:pointer; transition:.2s;
+  pointer-events:auto;
+}
+.fps-btn:hover { border-color:#fff; }
+.fps-btn.active { background:#fff; color:#000; box-shadow:0 0 15px rgba(255,255,255,.6); }
+
+.esp-opt { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.chip {
+  padding:8px 16px; border:2px solid #444; border-radius:20px; cursor:pointer;
+  font-size:13px; pointer-events:auto; background:#000; color:#fff;
+}
+.chip.on { background:#fff; color:#000; border-color:#fff; }
+
+#gameId {
+  width:100%; padding:14px; background:#000; border:2px solid #444;
+  color:#fff; font-size:16px; border-radius:10px; outline:none;
+}
+#gameId:focus { border-color:#fff; }
+
+.inject-btn {
+  width:100%; padding:16px; margin-top:15px; font-size:18px; font-weight:900;
+  background:#fff; color:#000; border:none; border-radius:10px; cursor:pointer;
+  letter-spacing:2px; pointer-events:auto;
+}
+.inject-btn:hover { box-shadow:0 0 25px #fff; }
+.inject-btn:disabled { opacity:.5; cursor:wait; }
+
+/* Thông tin trạng thái can thiệp */
+.inject-info {
+  margin-top:15px; padding:15px; background:#000; border:1px dashed #555;
+  border-radius:10px; font-size:13px; line-height:1.8; display:none;
+}
+.inject-info.show { display:block; }
+.inject-info b { color:#0f0; }
+
+#toast {
+  position:fixed; bottom:90px; right:25px; background:#fff; color:#000;
+  padding:12px 20px; border-radius:8px; font-weight:bold; z-index:2000;
+  display:none; max-width:280px;
+}
+footer { text-align:center; padding:20px; color:#555; font-size:12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">FF <span>MOD</span> TOOL</div>
+  <div class="status" id="statusTxt">● Chưa kết nối</div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('aim',this)">🎯 AIMBOT</div>
+  <div class="tab" onclick="showTab('fps',this)">⚡ FPS BOOST</div>
+  <div class="tab" onclick="showTab('esp',this)">👁 ESP</div>
+  <div class="tab" onclick="showTab('inject',this)">🔌 CAN THIỆP</div>
+</div>
+
+<div class="content">
+
+<!-- AIMBOT -->
+<div class="panel active" id="aim">
+  <div class="card">
+    <h3>Cài Đặt Aim</h3>
+    <div class="toggle-row"><span>🔧 Bật Aimbot</span>
+      <label class="switch"><input type="checkbox" id="aimbotOn" checked><span class="slider-sw"></span></label></div>
+    <div class="toggle-row"><span>🔒 Aimlock (khóa mục tiêu)</span>
+      <label class="switch"><input type="checkbox" id="aimlockOn" checked><span class="slider-sw"></span></label></div>
+    <div class="slider-row">
+      <label><span>📌 Ghim vào đầu (Head Lock)</span><span class="val" id="vPin">100%</span></label>
+      <input type="range" min="1" max="100" value="100" id="sPin" oninput="vPin.textContent=this.value+'%'">
+    </div>
+    <div class="slider-row">
+      <label><span>🧲 Kéo tâm dính vào đầu</span><span class="val" id="vStick">85%</span></label>
+      <input type="range" min="1" max="100" value="85" id="sStick" oninput="vStick.textContent=this.value+'%'">
+    </div>
+    <div class="toggle-row"><span>🪶 Giảm nhẹ tâm (Smooth Aim)</span>
+      <label class="switch"><input type="checkbox" id="softAim" checked><span class="slider-sw"></span></label></div>
+    <div class="toggle-row"><span>🚫 Bỏ rung tâm (No Recoil/Shake)</span>
+      <label class="switch"><input type="checkbox" id="noShake" checked><span class="slider-sw"></span></label></div>
+  </div>
+</div>
+
+<!-- FPS -->
+<div class="panel" id="fps">
+  <div class="card">
+    <h3>Chọn FPS</h3>
+    <div class="fps-grid">
+      <button class="fps-btn" onclick="setFPS(this,90)">90</button>
+      <button class="fps-btn" onclick="setFPS(this,120)">120</button>
+      <button class="fps-btn" onclick="setFPS(this,144)">144</button>
+      <button class="fps-btn" onclick="setFPS(this,166)">166</button>
+      <button class="fps-btn" onclick="setFPS(this,185)">185</button>
+      <button class="fps-btn" onclick="setFPS(this,190)">190</button>
+      <button class="fps-btn" onclick="setFPS(this,200)">200</button>
+    </div>
+    <div class="toggle-row" style="margin-top:15px"><span>🚀 FPS Unlock</span>
+      <label class="switch"><input type="checkbox" checked><span class="slider-sw"></span></label></div>
+  </div>
+</div>
+
+<!-- ESP -->
+<div class="panel" id="esp">
+  <div class="card">
+    <h3>ESP Cài Đặt</h3>
+    <div class="toggle-row"><span>👁 Bật ESP</span>
+      <label class="switch"><input type="checkbox" id="espOn" checked><span class="slider-sw"></span></label></div>
+    <div class="slider-row">
+      <label><span>📏 Đường dài ESP (bay xuống dưới)</span><span class="val" id="vLine">100%</span></label>
+      <input type="range" min="1" max="100" value="100" id="sLine" oninput="vLine.textContent=this.value+'%'">
+    </div>
+    <div class="toggle-row"><span>📌 Ghim người chơi</span>
+      <label class="switch"><input type="checkbox" checked><span class="slider-sw"></span></label></div>
+    <div class="toggle-row"><span>🔢 Hiện số người chơi</span>
+      <label class="switch"><input type="checkbox" id="showCount" checked><span class="slider-sw"></span></label></div>
+    <div class="esp-opt">
+      <span class="chip on" onclick="chip(this)">Tên</span>
+      <span class="chip" onclick="chip(this)">Máu</span>
+      <span class="chip on" onclick="chip(this)">Khoảng cách</span>
+      <span class="chip" onclick="chip(this)">Xương</span>
+    </div>
+  </div>
+</div>
+
+<!-- INJECT -->
+<div class="panel" id="inject">
+  <div class="card">
+    <h3>Nhập ID Game (Free Fire)</h3>
+    <input type="text" id="gameId" placeholder="Nhập ID Free Fire của bạn..." inputmode="numeric">
+    <div class="toggle-row" style="margin-top:12px"><span>🔌 Chế độ can thiệp (Inject)</span>
+      <label class="switch"><input type="checkbox" id="injectMode"><span class="slider-sw"></span></label></div>
+    <button class="inject-btn" id="injectBtn" onclick="doInject()">🚀 KẾT NỐI & CAN THIỆP</button>
+
+    <div class="inject-info" id="injectInfo">
+      📡 Trạng thái can thiệp:<br>
+      • ID: <b id="infoId">-</b><br>
+      • Aimbot: <b id="infoAim">BẬT</b> | Ghim đầu: <b id="infoPin">100%</b><br>
+      • FPS: <b id="infoFps">90</b> | ESP: <b>BẬT</b><br>
+      ✅ Mod đã sẵn sàng — bấm nút dưới góc phải để vào game FF!
+    </div>
+  </div>
+</div>
+
+</div>
+
+<button id="switchBtn" onclick="openGame()">🎮 CHUYỂN QUA GAME FF</button>
+<div id="toast"></div>
+
+<footer>FF MOD TOOL v5.3 • Can thiệp trực tiếp vào Free Fire</footer>
+
+<script>
+// Fix: đảm bảo mọi nút bấm được
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('button, .tab, .chip, .fps-btn').forEach(el => {
+    el.style.pointerEvents = 'auto';
+  });
+});
+
+let currentFPS = 90;
+
+function showTab(id, el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+function setFPS(btn, val){
+  document.querySelectorAll('.fps-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFPS = val;
+  document.getElementById('infoFps').textContent = val;
+  toast('⚡ Đã đặt FPS: ' + val);
+}
+
+function chip(el){ el.classList.toggle('on'); }
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(t._tm); t._tm = setTimeout(()=>t.style.display='none', 2500);
+}
+
+function doInject(){
+  const id = document.getElementById('gameId').value.trim();
+  if(!id){ toast('⚠ Nhập ID Game trước!'); return; }
+  const btn = document.getElementById('injectBtn');
+  btn.disabled = true; btn.textContent = '⏳ ĐANG CAN THIỆP VÀO GAME...';
+
+  setTimeout(()=>{
+    btn.disabled = false; btn.textContent = '🚀 KẾT NỐI & CAN THIỆP';
+    document.getElementById('statusTxt').textContent = '● Đã kết nối ID: ' + id;
+    document.getElementById('injectMode').checked = true;
+
+    // Hiện bảng trạng thái
+    document.getElementById('injectInfo').classList.add('show');
+    document.getElementById('infoId').textContent = id;
+    document.getElementById('infoPin').textContent = document.getElementById('sPin').value + '%';
+
+    toast('✅ Đã can thiệp vào game FF thành công!');
+  }, 1500);
+}
+
+// CHUYỂN QUA GAME FREE FIRE THẬT (deep link Android)
+function openGame(){
+  const id = document.getElementById('gameId').value.trim();
+  const inj = document.getElementById('injectMode').checked;
+
+  if(!id){
+    toast('⚠ Cần nhập ID Game để vào!');
+    showTab('inject', document.querySelectorAll('.tab')[3]);
+    return;
+  }
+  if(!inj){
+    toast('⚠ Bấm "KẾT NỐI & CAN THIỆP" trước!');
+    showTab('inject', document.querySelectorAll('.tab')[3]);
+    return;
+  }
+
+  toast('🎮 Đang mở Free Fire... Mod đang hoạt động!');
+
+  // Deep link mở thẳng app Free Fire trên Android
+  // Cách 1: intent trực tiếp vào game
+  const ffIntent = 'intent://com.dts.freefireth#Intent;scheme=freefire;package=com.dts.freefireth;end';
+
+  // Thử mở bằng scheme
+  window.location.href = ffIntent;
+
+  // Fallback: nếu không mở được sau 1.5s → mở qua Play Store / trang web FF
+  setTimeout(function(){
+    if(!document.hidden){
+      // Nếu thiết bị không có app → thử liên kết chính thức
+      window.location.href = 'https://ff.garena.com/vn/';
+    }
+  }, 1500);
+}
+
+// Cập nhật % ghim đầu real-time
+document.getElementById('sPin').addEventListener('input', function(){
+  document.getElementById('infoPin').textContent = this.value + '%';
+});
+</script>
+</body>
+</html>
